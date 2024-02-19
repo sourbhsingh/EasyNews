@@ -1,6 +1,7 @@
 package com.sourabh_projects.easynews.screen.onboarding
-
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sourabh_projects.easynews.domain.manager.usecases.AppEntryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OnBoardingViewModal @Inject constructor(
     private val appEntryUseCases: AppEntryUseCases
-): ViewModel() {
+): ViewModel(){
 
     fun onEvent(event: OnBoardingEvent){
         when(event){

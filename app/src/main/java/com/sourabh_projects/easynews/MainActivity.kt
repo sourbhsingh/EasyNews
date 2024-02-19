@@ -19,6 +19,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.sourabh_projects.easynews.domain.manager.usecases.AppEntryUseCases
+import com.sourabh_projects.easynews.screen.navgraph.NavGraph
 import com.sourabh_projects.easynews.screen.onboarding.OnBoardingEvent
 import com.sourabh_projects.easynews.screen.onboarding.OnBoardingScreen
 import com.sourabh_projects.easynews.screen.onboarding.OnBoardingViewModal
@@ -31,19 +32,16 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    @Inject
-    lateinit var useCases : AppEntryUseCases
-
+     val viewModal by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window,false)
-        installSplashScreen()
-        lifecycleScope.launch {
-            useCases.readAppEntry().collect(){
-                Log.d("test",it.toString())
+        installSplashScreen().apply { 
+            setKeepOnScreenCondition{
+                viewModal.splashCondition
             }
         }
+
 
         setContent {
             EasyNewsTheme {
@@ -51,8 +49,8 @@ class MainActivity : ComponentActivity() {
                 Box(
                     modifier = Modifier.background(color =MaterialTheme.colorScheme.background)
                 ) {
-                    val viewModel : OnBoardingViewModal by viewModels()
-                    OnBoardingScreen(event = viewModel::onEvent)
+                  val startDestination = viewModal.startDestination
+                    NavGraph(startDestination = startDestination)
                 }
             }
         }
